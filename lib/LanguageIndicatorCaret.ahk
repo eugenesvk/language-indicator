@@ -165,10 +165,25 @@ InitCaretState() {
 		state.caretMarkImage := ""
 }
 
+enU	:= DllCall("LoadKeyboardLayout", "str","00000409", "uint",1) ; kbdus.dll
+ruU	:= DllCall("LoadKeyboardLayout", "str","00000419", "uint",1) ; kbdru.dll
 UpdateCaretState() {
+	static last_changed_locale := 0
 	global state
+	locale_num := 0
 	state.prev.locale := state.locale
-	state.locale := GetInputLocaleIndex()
+	state.locale := GetInputLocaleIndex(&locale_num)
+	if   (state.locale != state.prev.locale)
+		|| (state.locale != last_changed_locale){
+		last_changed_locale := state.locale
+		if        (locale_num == ruU) {
+			TraySetIcon("img\lng-RU48.ico",,)
+		} else if (locale_num == enU) {
+			TraySetIcon("img\lng-US48.ico",,)
+		} else {
+			TraySetIcon("*",,)
+		}
+	}
 
 	state.prev.capslock := state.capslock
 	state.capslock := GetCapslockState()
