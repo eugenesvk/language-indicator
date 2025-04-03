@@ -165,22 +165,29 @@ InitCaretState() {
 		state.caretMarkImage := ""
 }
 
-enU	:= DllCall("LoadKeyboardLayout", "str","00000409", "uint",1) ; kbdus.dll
-ruU	:= DllCall("LoadKeyboardLayout", "str","00000419", "uint",1) ; kbdru.dll
+enU	:= DllCall("LoadKeyboardLayout"	, "str","00000409"	, "uint",1) ; kbdus.dll
+ruU	:= DllCall("LoadKeyboardLayout"	, "str","00000419"	, "uint",1) ; kbdru.dll
 UpdateCaretState() {
-	static last_changed_locale := 0
+	static i:=0
+	, last_changed_locale := 0
 	global state
 	locale_num := 0
 	state.prev.locale := state.locale
 	state.locale := GetInputLocaleIndex(&locale_num)
+	state.locale_changed := GetInputLocaleIndex(&locale_num)
+	; tt := Tooltip("UpdateCaretState",0,0,3)
+	i+=1
 	if   (state.locale != state.prev.locale)
 		|| (state.locale != last_changed_locale){
 		last_changed_locale := state.locale
-		if        (locale_num == ruU) {
+		if (locale_num == ruU) {
+			tt := Tooltip(i "¦" state.prev.locale " → " state.locale " = " locale_num " RU",,,4)
 			TraySetIcon("img\lng-RU48.ico",,)
 		} else if (locale_num == enU) {
+			tt := Tooltip(i "¦" state.prev.locale " → " state.locale " = " locale_num " EN",,,4)
 			TraySetIcon("img\lng-US48.ico",,)
 		} else {
+			tt := Tooltip(i "¦" state.prev.locale " → " state.locale " = " locale_num " ??",,,4)
 			TraySetIcon("*",,)
 		}
 	}
