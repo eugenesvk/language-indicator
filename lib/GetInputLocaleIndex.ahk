@@ -5,9 +5,10 @@
 global localesArray := [GetInputLocaleId()] ; start with one value of initial input locale ID
 
 ; populates localesArray
-GetInputLocaleIndex() {
+GetInputLocaleIndex(&locale_num:=0) {
 	global localesArray
 	localeId := GetInputLocaleId() ; docs.microsoft.com/en-us/windows/win32/intl/language-identifiers
+	locale_num := localeId
 
 	if !localeId {
 		return 0
