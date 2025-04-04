@@ -166,19 +166,22 @@ InitCaretState() {
 }
 
 UpdateCaretState() {
-	static last_changed_locale := 0
+	static last_changed_locale := 0, counter := 0
+	counter += 1
 	global state
 	lang_id := 0x0000
 	state.prev.locale := state.locale
 	state.locale := GetInputLocaleIndex(&lang_id)
 	if   (state.locale != state.prev.locale)
 		|| (state.locale != last_changed_locale){
+		; Tooltip(counter " state.locale=" state.locale Format("`n{1:#04x}`tlang_id",lang_id) "`n" Format("{1:#04x}`tlocalesArray1",localesArray[1]) " " langNamesArray[1] "`n" localesArray.Length " =? " langNamesArray.length,x:=0,y:=50,id:=17)
 		last_changed_locale := state.locale
 		set_lang := False
 		for i, l_id in localesArray {
 			if (lang_id == l_id) {
 				set_lang := True
 				try {
+				; Tooltip(" i=" i " name = ‹" langNamesArray[i] "›",x:=0,y:=0,id:=18)
 					TraySetIcon("img\lang\" langNamesArray[i] ".ico",,)
 				} catch Error as err {
 					TraySetIcon("*",,)
