@@ -10,7 +10,7 @@ AHK v2 script to detect text caret' position, with the use of following techniqu
 #Requires AutoHotKey 2.1-alpha.18
 #include ActiveMonitor.ahk
 #include Jsons.ahk
-#include Log.ahk
+Include Log {Log}
 
 ; credits to https://github.com/Tebayaki/AutoHotkeyScripts/blob/main/lib/GetCaretPosEx/GetCaretPosEx.ahk
 GetCaretRect(&left?, &top?, &right?, &bottom?, &cartetDetectMethod?) {

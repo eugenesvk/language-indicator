@@ -1,6 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.18
 #include TickCount.ahk
-#include Log.ahk
+Include Log {Log}
 
 zeroSpeed := { x: 0, y: 0, period: 100 }
 zeroPos := { x: -1, y: -1, time: 0, speed: zeroSpeed }

@@ -1,7 +1,7 @@
 #Requires AutoHotKey 2.1-alpha.18
 #include UseCached.ahk
 #include TickCount.ahk
-;#include Log.ahk
+;Include Log {Log}
 
 ; run fn at (almost) every frame for certain period of time
 OnFrameRate(fn, timeLimit := 100) {

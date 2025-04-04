@@ -14,7 +14,7 @@
 #include OnFrameRate.ahk
 #include UseBase64Image.ahk
 #include UseCached.ahk
-#include Log.ahk
+Include Log {Log}
 
 if !IsSet(cfg)
 	global cfg := {}

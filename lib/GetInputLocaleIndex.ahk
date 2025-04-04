@@ -1,6 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.18
 #include GetInputLocaleId.ahk
-#include HasValue.ahk
+Include HasValue {HasValue}
 #include constLocale.ahk
 #include Locale.ahk
 
@@ -33,7 +33,7 @@ InitUserLang() {
 InitUserLang()
 
 ; populates localesArray
-GetInputLocaleIndex(&lang_id:=0) {
+export GetInputLocaleIndex(&lang_id:=0) {
 	global localesArray
 	localeId := GetInputLocaleId() ; docs.microsoft.com/en-us/windows/win32/intl/language-identifiers
 

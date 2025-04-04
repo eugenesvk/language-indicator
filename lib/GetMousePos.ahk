@@ -1,5 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.18
-#include Log.ahk
+Include Log {Log}
 
 GetMousePos() {
 	CoordMode "Mouse", "Screen"

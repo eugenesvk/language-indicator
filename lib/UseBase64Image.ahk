@@ -1,5 +1,5 @@
 #Requires AutoHotKey 2.1-alpha.18
-#include Log.ahk
+Include Log {Log}
 
 ; imagesPath := "../img/base64-embedded-images/"
 

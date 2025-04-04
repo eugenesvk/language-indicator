@@ -12,7 +12,7 @@
 #include UseBase64Image.ahk
 #include OnFrameRate.ahk
 #include TickCount.ahk
-#include Log.ahk
+Include Log {Log}
 
 if !IsSet(cfg)
 	global cfg := {}

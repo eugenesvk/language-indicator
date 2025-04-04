@@ -1,6 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.18
 
-HasValue(haystack, val) {
+export HasValue(haystack, val) {
 	for index, value in haystack
 		if (value = val)
 			return index

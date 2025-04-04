@@ -1,7 +1,7 @@
 #Requires AutoHotKey 2.1-alpha.18
 
 #include ActiveMonitor.ahk
-#include Log.ahk
+Include Log {Log}
 
 DebugCaretPosition(&l, &t, &r, &b, &detectMethod) {
 	win := ActiveMonitor.getActiveWinRect()
