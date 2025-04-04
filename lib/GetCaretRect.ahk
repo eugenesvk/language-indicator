@@ -7,7 +7,7 @@ AHK v2 script to detect text caret' position, with the use of following techniqu
 	5. getCaretPosFromHook (some .NET apps, Adobe Indesign)
 */
 
-#requires AutoHotkey v2.0
+#Requires AutoHotKey 2.1-alpha.18
 #include ActiveMonitor.ahk
 #include Jsons.ahk
 #include Log.ahk

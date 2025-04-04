@@ -5,7 +5,7 @@
 ; Date:      2023-03-02
 ; Version:   1.10
 
-#Requires AutoHotkey v2.0-beta.13+
+#Requires AutoHotKey 2.1-alpha.18-beta.13+
 
 
 ; Puts the image into a file format and returns a base64 encoded string.

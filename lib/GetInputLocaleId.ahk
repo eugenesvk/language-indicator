@@ -1,4 +1,4 @@
-#requires AutoHotkey v2.0
+#Requires AutoHotKey 2.1-alpha.18
 #DllLoad "Imm32" ; for consoles compatibility, see docs.microsoft.com/en-us/windows/win32/api/imm/
 
 global imm := DllCall("GetModuleHandle", "Str", "Imm32", "Ptr") ; better performance; lexikos.github.io/v2/docs/commands/DllCall.htm

@@ -1,4 +1,4 @@
-#Requires AutoHotkey v2.0
+#Requires AutoHotKey 2.1-alpha.18
 #include Log.ahk
 #include Jsons.ahk
 

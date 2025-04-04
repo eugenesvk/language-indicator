@@ -5,7 +5,7 @@
 ; 2. in case there's no "./cursors/" folder exist, embedded images to be used to set mark near mouse cursor/pointer
 
 #singleinstance force
-#requires AutoHotkey v2.0
+#Requires AutoHotKey 2.1-alpha.18
 
 #include GetInputLocaleIndex.ahk ; https://www.autohotkey.com/boards/viewtopic.php?t=84140
 #include GetCapslockState.ahk
