@@ -36,4 +36,3 @@ export class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t
     }
   }
 }
-
