@@ -1,9 +1,9 @@
 #Requires AutoHotKey 2.1-alpha.18
 
-#include ActiveMonitor.ahk
-Include Log {Log}
+import "language-indicator/lib/ActiveMonitor" {ActiveMonitor}
+Import "language-indicator/lib/Log" as L
 
-DebugCaretPosition(&l, &t, &r, &b, &detectMethod) {
+export DebugCaretPosition(&l, &t, &r, &b, &detectMethod) {
 	win := ActiveMonitor.getActiveWinRect()
 	winRect := ActiveMonitor.winRect
 	posData := ""
@@ -27,7 +27,7 @@ DebugCaretPosition(&l, &t, &r, &b, &detectMethod) {
 	monitorData := "active monitor:  id=" monitorID "  scale=" scale "  l=" monL "  t=" monT "  r=" monR "  b=" monB "`n"
 	windowData := "window:  l=" winRect.l "  t=" winRect.t "  r=" winRect.r "  b=" winRect.b "`n"
 	virtualScreen := _virtualScreenData() "`n"
-	Log(method posData monitorData windowData virtualScreen)
+	L.Log(method posData monitorData windowData virtualScreen)
 }
 
 _virtualScreenData() {

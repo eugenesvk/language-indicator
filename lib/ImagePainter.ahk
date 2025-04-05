@@ -1,7 +1,7 @@
 #Requires AutoHotKey 2.1-alpha.18
 #include ImagePut.ahk
 
-class ImagePainter {
+export class ImagePainter {
     zero := { image: "", name: "", x: "", y: "", time: -1 }
     window := -1
     margin := { x: 0, y: 0 } ; margin from the cursor's center

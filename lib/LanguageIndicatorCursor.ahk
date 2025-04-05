@@ -1,20 +1,20 @@
+#Requires AutoHotKey 2.1-alpha.18
 ; Set custom text select pointer or paint a mark nearby, depending on input language and capslock state.
 
 ; Script work in this way:
 ; 1. lookin into "./cursors/" folder for files "1.cur", "1-capslock.cur", "2.cur", etc.
 ; 2. in case there's no "./cursors/" folder exist, embedded images to be used to set mark near mouse cursor/pointer
 
-#singleinstance force
-#Requires AutoHotKey 2.1-alpha.18
+; #singleinstance force
 
-#include GetInputLocaleIndex.ahk ; https://www.autohotkey.com/boards/viewtopic.php?t=84140
-#include GetCapslockState.ahk
-#include GetMousePosPrediction.ahk
-#include ImagePainter.ahk ; based on ImagePut.ahk
-#include OnFrameRate.ahk
-#include UseBase64Image.ahk
-#include UseCached.ahk
-Include Log {Log}
+import "language-indicator/lib/GetInputLocaleIndex"  	{GetInputLocaleIndex} ; https://www.autohotkey.com/boards/viewtopic.php?t=84140
+import "language-indicator/lib/GetCapslockState"     	{GetCapslockState}
+import "language-indicator/lib/GetMousePosPrediction"	as GetMousePosPrediction
+import "language-indicator/lib/ImagePainter"         	{ImagePainter} ; based on ImagePut.ahk
+import "language-indicator/lib/OnFrameRate"          	as OnFrameRate
+import "language-indicator/lib/UseBase64Image"       	{*}
+import "language-indicator/lib/UseCached"            	{UseCached}
+Import "language-indicator/lib/Log"                  	as L
 
 if !IsSet(cfg)
 	global cfg := {}
@@ -24,7 +24,7 @@ cfg.cursor := {
 	files: {
 		capslockSuffix: "-capslock",
 		folderExistCheckPeriod: 1000, ; optimization?
-		folder: A_ScriptDir . "\cursors\",
+		folder: A_ScriptDir . "\language-indicator\cursors\",
 		extensions: [".cur", ".ani", ".ico"],
 	},
 	markMargin: { x: 11, y: -11 },
@@ -75,7 +75,7 @@ UseCursorMarkEmbedded() {
 	PaintCursorMark(mark) ; repaint mark every ~cfg.updatePeriod...
 	onFrame.ScheduleRun(() => PaintCursorMark(mark), "cursor", cfg.cursor.updatePeriod) ; ...repaint mark on a few next frames
 }
-onFrame := OnFrameRateScheduler.Increase() ; must be removed if not used in the line above
+onFrame := OnFrameRate.OnFrameRateScheduler.Increase() ; must be removed if not used in the line above
 
 UseCursorFile() {
 	if (state.cursorFile == "") {
@@ -127,16 +127,16 @@ global modifiedCursorsCount := 0
 SetCursorFromFile(filePath := "") {
 	global cfg, modifiedCursorsCount
 	if (!filePath or filePath == "") {
-		; Log("LanguageIndicatorCursor.ahk: cursor's filePath is not set")
+		; L.Log("LanguageIndicatorCursor.ahk: cursor's filePath is not set")
 		return
 	} else if FileExist(filePath) {
 		SplitPath(filePath, , , &ext)
 		if !(ext ~= "^(?i:cur|ani|ico)$") {
-			; Log("LanguageIndicatorCursor.ahk: invalid file extension, only (ani|cur|ico) allowed")
+			; L.Log("LanguageIndicatorCursor.ahk: invalid file extension, only (ani|cur|ico) allowed")
 			return
 		}
 	} else {
-		; Log("LanguageIndicatorCursor.ahk: (" . filePath . ") was not found on disk")
+		; L.Log("LanguageIndicatorCursor.ahk: (" . filePath . ") was not found on disk")
 		return
 	}
 	cursorHandle := DllCall("LoadCursorFromFile", "Str", filePath)
@@ -170,7 +170,7 @@ PaintCursorMark(markObj, cursor := "IBeam") {
 		return
 	}
 
-	pos := GetMousePos(cfg.cursor.mousePositionPrediction) ; use prediction
+	pos := GetMousePosPrediction.GetMousePos(cfg.cursor.mousePositionPrediction) ; use prediction
 
 	if (pos.x == -1 or pos.x == -1) { ; wrong cursor position
 		cursorMark.HideWindow()
@@ -229,7 +229,7 @@ CheckCursorsFolderExist() {
 	exist := DirExist(cfg.cursor.files.folder)
 
 	if exist
-		OnFrameRateScheduler.Decrease() ; prevent flickering
+		OnFrameRate.OnFrameRateScheduler.Decrease() ; prevent flickering
 
 	return exist
 }
@@ -242,4 +242,4 @@ CursorExitFunc(ExitReason, ExitCode) {
 }
 
 if cfg.cursor.debug
-	Log(cfg)
+	L.Log(cfg)

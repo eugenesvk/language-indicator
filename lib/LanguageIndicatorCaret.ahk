@@ -1,18 +1,20 @@
+#Requires AutoHotKey 2.1-alpha.18
 ; Add extra mark to the text caret (aka blinking cursor) depending on input language and capslock state.
 ; Script is lookin into "./carets/" folder for files like "1-capslock.png", "2.png", etc.
 
-#singleinstance force
-#Requires AutoHotKey 2.1-alpha.18
+; #singleinstance force
 
-#include DebugCaretPosition.ahk
-#include GetCapslockState.ahk
-#include GetInputLocaleIndex.ahk
-#include GetCaretRect.ahk
-#include ImagePainter.ahk ; based on ImagePut.ahk
-#include UseBase64Image.ahk
-#include OnFrameRate.ahk
-#include TickCount.ahk
-Include Log {Log}
+import "language-indicator/lib/DebugCaretPosition" 	{DebugCaretPosition}
+import "language-indicator/lib/GetCapslockState"   	{GetCapslockState}
+import "language-indicator/lib/GetInputLocaleIndex"	{GetInputLocaleIndex}
+import "language-indicator/lib/GetCaretRect"       	{GetCaretRect}
+import "language-indicator/lib/ImagePainter"       	{ImagePainter} ; based on ImagePut.ahk
+import "language-indicator/lib/UseBase64Image"     	{*}
+import "language-indicator/lib/OnFrameRate"        	as OnFrameRate
+import "language-indicator/lib/TickCount"          	{TickCount}
+import "language-indicator/lib/Log"                	as L
+import "language-indicator/lib/UseCached"          	{UseCached}
+import "language-indicator/var"                    	{localesArray, langNamesArray}
 
 if !IsSet(cfg)
 	global cfg := {}
@@ -23,7 +25,7 @@ cfg.caret := {
 	files: {
 		capslockSuffix: "-capslock",
 		folderExistCheckPeriod: 1000, ; optimization?
-		folder: A_ScriptDir . "\carets\",
+		folder: A_ScriptDir . "\language-indicator\carets\",
 		extensions: [".png", ".gif"]
 	},
 	markMargin: { x: 1, y: -1 },
@@ -55,7 +57,7 @@ CheckCaret() {
 		: UseCaretMarkEmbedded() ; use embedded base64 image
 }
 
-onFrame := OnFrameRateScheduler.Increase() ; must be decreased if `onFrame.ScheduleRun` not used in code below
+onFrame := OnFrameRate.OnFrameRateScheduler.Increase() ; must be decreased if `onFrame.ScheduleRun` not used in code below
 UseCaretMarkEmbedded() {
 	global state
 	state.caretMarkName := GetCaretMarkName(state.locale, state.capslock)
@@ -182,7 +184,7 @@ UpdateCaretState() {
 				set_lang := True
 				try {
 				; Tooltip(" i=" i " name = ‹" langNamesArray[i] "›",x:=0,y:=0,id:=18)
-					TraySetIcon("img\lang\" langNamesArray[i] ".ico",,)
+					TraySetIcon("language-indicator\img\lang\" langNamesArray[i] ".ico",,)
 				} catch Error as err {
 					TraySetIcon("*",,)
 				}
@@ -222,4 +224,4 @@ CaretExitFunc(ExitReason, ExitCode) {
 }
 
 if cfg.caret.debug
-	Log(cfg)
+	L.Log(cfg)

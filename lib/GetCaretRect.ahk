@@ -8,12 +8,12 @@ AHK v2 script to detect text caret' position, with the use of following techniqu
 */
 
 #Requires AutoHotKey 2.1-alpha.18
-#include ActiveMonitor.ahk
+import "language-indicator/lib/ActiveMonitor" {ActiveMonitor}
 #include Jsons.ahk
-Include Log {Log}
+import "language-indicator/lib/Log" as L
 
 ; credits to https://github.com/Tebayaki/AutoHotkeyScripts/blob/main/lib/GetCaretPosEx/GetCaretPosEx.ahk
-GetCaretRect(&left?, &top?, &right?, &bottom?, &cartetDetectMethod?) {
+export GetCaretRect(&left?, &top?, &right?, &bottom?, &cartetDetectMethod?) {
 	hwnd := getActiveHWND()
 	className := getClassName(hwnd)
 	isTelegram := InStr(className, "51515") ; telegram (class=Qt51515QWindowIcon)

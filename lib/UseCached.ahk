@@ -16,7 +16,7 @@ GetTime3000 := useCached(GetTime, 3000)
 GetTime10000 := useCached(GetTime, 10000)
 */
 
-UseCached(fn, timeout := 100) {
+export UseCached(fn, timeout := 100) {
     if (timeout < 1)
         return fn
     cache := ""

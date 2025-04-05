@@ -1,10 +1,10 @@
 #Requires AutoHotKey 2.1-alpha.18
 #include UseCached.ahk
 #include TickCount.ahk
-;Include Log {Log}
+import "language-indicator/lib/Log" as L
 
 ; run fn at (almost) every frame for certain period of time
-OnFrameRate(fn, timeLimit := 100) {
+export OnFrameRate(fn, timeLimit := 100) {
     fps := GetCachedFps()
     framesCountLimit := Round((timeLimit / 1000) * fps) - 1
     sleep := Floor(1000 / fps) ; = one frame
@@ -38,7 +38,7 @@ GetFps(defaultFrameRate := 60) {
 
 GetCachedFps := UseCached(GetFps, 1000) ; cache fn result for 1 second
 
-class OnFrameRateScheduler {
+export class OnFrameRateScheduler {
     static subscribers := Map()
     static timeLimit := -1 ; one for all, minimal
     static minSubscribersCount := 0

@@ -1,6 +1,6 @@
 #Requires AutoHotKey 2.1-alpha.18
 #include TickCount.ahk
-Include Log {Log}
+Import "language-indicator/lib/Log" as L
 
 zeroSpeed := { x: 0, y: 0, period: 100 }
 zeroPos := { x: -1, y: -1, time: 0, speed: zeroSpeed }
@@ -15,7 +15,7 @@ global mouseState := {
 }
 
 ; predict next mouse cursor position to reduce distance lag between cursor and mark
-GetMousePos(predictionAmount := 0) {
+export GetMousePos(predictionAmount := 0) {
 	global mouseState
 
 	GetMouseData()

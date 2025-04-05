@@ -1,5 +1,5 @@
 ; —————————— Locale win32 Constants ——————————
-global win_langID := Map() ; 4/23/2024 16.0 learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f
+win_langID := Map() ; 4/23/2024 16.0 learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f
   win_langID.CaseSense := 0
   win_langID.Capacity := 500
   win_langID['ar'               	] := 0x0001
@@ -471,7 +471,7 @@ global win_langID := Map() ; 4/23/2024 16.0 learn.microsoft.com/en-us/openspecs/
   win_langID['ku-Arab'          	] := 0x7C92
   win_langID['fr-015'           	] := 0xE40C
 
-class localeInfo { ; define the "LOCALE_..." constants
+export class localeInfo { ; define the "LOCALE_..." constants
   static __new() { ; get all vars and store their values in this.Varname as well ‘m’ map, and add aliases
     m := Map()
     m.CaseSense := 0 ; make key matching case insensitive
@@ -479,5 +479,6 @@ class localeInfo { ; define the "LOCALE_..." constants
       m['eng'	]:=0x00000067	; LOCALE_SISO639LANGNAME2 WinVista+: Three-letter ISO language name, in lowercase form (ISO 639-2 three-letter code for the language), such as "eng" for English. The maximum number of characters allowed for this string is nine, including a terminating null character.
       m['US' 	]:=0x0000005A	; LOCALE_SISO3166CTRYNAME WinMe/98, WinNT4.0: Country/region name, based on ISO Standard 3166, such as "US" for the United States. This can also return a number, such as "029" for Caribbean. The maximum number of characters allowed for this string is nine, including a terminating null character.
     this.m := m
+    this.lngid := win_langID
   }
 }

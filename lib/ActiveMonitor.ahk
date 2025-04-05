@@ -1,8 +1,8 @@
 #Requires AutoHotKey 2.1-alpha.18
-Include Log {Log, Logg}
+import "language-indicator/lib/Log" as L
 #include Jsons.ahk
 
-class ActiveMonitor {
+export class ActiveMonitor {
 	static id := -1
 	static monitorCount := 0
 	static activeWindow := 0
@@ -57,7 +57,7 @@ class ActiveMonitor {
 
 			return activeWindow
 		} catch as e {
-			Log(e)
+			L.Log(e)
 			return false
 		}
 	}

@@ -1,13 +1,13 @@
-#include constLocale.ahk
+Import "language-indicator/lib/constLocale" {localeInfo as locInf}
 
 global bytes⁄char := 2
 
-class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t=28258
+export class Lyt { ; some methods from autohotkey.com/boards/viewtopic.php?f=6&t=28258
   static INPUTLANGCHANGE_FORWARD	:= 0x0002
    , INPUTLANGCHANGE_BACKWARD   	:= 0x0004
    , KLIDsREG_PATH              	:= "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\"
   ; —————————— Locale Functions ——————————
-  static locInf := localeInfo.m  ; Constants Used in the LCType Parameter of GetLocaleInfo, GetLocaleInfoEx, and SetLocaleInfo
+  static locInf := locInf.m  ; Constants Used in the LCType Parameter of GetLocaleInfo, GetLocaleInfoEx, and SetLocaleInfo
   static getLocaleInfo(infoLCTs, LocaleID) { ; get info about a locale specified by ID
     ;infoLCT 	LCTYPE	locale information to retrieve, LCType @ learn.microsoft.com/en-us/windows/desktop/api/winnls/nf-winnls-getlocaleinfoex
     ;LocaleID	LCID  	learn.microsoft.com/en-us/windows/desktop/Intl/locale-identifiers

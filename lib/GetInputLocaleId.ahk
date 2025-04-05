@@ -4,7 +4,7 @@
 global imm := DllCall("GetModuleHandle", "Str", "Imm32", "Ptr") ; better performance; lexikos.github.io/v2/docs/commands/DllCall.htm
 global immGetDefaultIMEWnd := DllCall("GetProcAddress", "Ptr", imm, "AStr", "ImmGetDefaultIMEWnd", "Ptr") ; docs.microsoft.com/en-us/windows/win32/api/imm/nf-imm-immgetdefaultimewnd
 
-GetInputLocaleId() {
+export GetInputLocaleId() {
 	foregroundWindow := DllCall("GetForegroundWindow") ; docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow
 
 	isConsole := WinActive("ahk_class ConsoleWindowClass") ; CMD, Powershell
