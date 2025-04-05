@@ -7,7 +7,6 @@ import "language-indicator\state"	{state as _st}
 import "language-indicator\var"  	{localesArray, langNamesArray}
 
 import "language-indicator\lib\DebugCaretPosition" 	{DebugCaretPosition}
-import "language-indicator\lib\GetCapslockState"   	{GetCapslockState}
 import "language-indicator\lib\GetInputLocaleIndex"	{GetInputLocaleIndex}
 import "language-indicator\lib\GetCaretRect"       	{GetCaretRect}
 import "language-indicator\lib\ImagePainter"       	{ImagePainter} ; based on ImagePut.ahk
@@ -124,12 +123,6 @@ PaintCaretMark(markObj) {
 }
 
 InitCaretState() {
-	if !_st.HasOwnProp("prev")
-		_st.prev := {}
-	if !_st.HasOwnProp("locale")
-		_st.locale := 1
-	if !_st.HasOwnProp("capslock")
-		_st.capslock := 0
 	if !_st.HasOwnProp("caretMarkName")
 		_st.caretMarkName := ""
 	if !_st.HasOwnProp("caretMarkImage")
@@ -137,11 +130,6 @@ InitCaretState() {
 }
 
 UpdateCaretState() {
-	static last_changed_locale := 0
-
-	_st.prev.capslock := _st.capslock
-	_st.capslock := GetCapslockState()
-
 	if CaretsFolderExist() {
 		_st.prev.caretMarkImage := _st.caretMarkImage
 		_st.caretMarkImage := GetCaretMarkFile()

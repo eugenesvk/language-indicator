@@ -9,7 +9,6 @@ import "language-indicator\cfg"  	as cfg
 import "language-indicator\state"	{state as _st}
 
 import "language-indicator\lib\GetInputLocaleIndex"  	{GetInputLocaleIndex} ; https://www.autohotkey.com/boards/viewtopic.php?t=84140
-import "language-indicator\lib\GetCapslockState"     	{GetCapslockState}
 import "language-indicator\lib\GetMousePosPrediction"	as GetMousePosPrediction
 import "language-indicator\lib\ImagePainter"         	{ImagePainter} ; based on ImagePut.ahk
 import "language-indicator\lib\OnFrameRate"          	as OnFrameRate
@@ -156,13 +155,6 @@ PaintCursorMark(markObj, cursor := "IBeam") {
 }
 
 InitCursorState() {
-	global state
-	if !_st.HasOwnProp("prev")
-		_st.prev := {}
-	if !_st.HasOwnProp("locale")
-		_st.locale := 1
-	if !_st.HasOwnProp("capslock")
-		_st.capslock := 0
 	if !_st.HasOwnProp("cursorFile")
 		_st.cursorFile := ""
 	if !_st.HasOwnProp("cursorMarkName")
@@ -170,13 +162,6 @@ InitCursorState() {
 }
 
 UpdateCursorState() {
-	global state
-	_st.prev.locale := _st.locale
-	_st.locale := GetInputLocaleIndex()
-
-	_st.prev.capslock := _st.capslock
-	_st.capslock := GetCapslockState()
-
 	if CursorsFolderExist() {
 		_st.prev.cursorFile := _st.cursorFile
 		_st.cursorFile := GetCursorFile()
