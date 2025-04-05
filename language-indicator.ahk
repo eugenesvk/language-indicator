@@ -6,6 +6,8 @@ import "language-indicator\state"	{state as _st}
 import "language-indicator\var"  	{localesArray, langNamesArray}
 
 import "language-indicator\lib\GetInputLocaleIndex"	{GetInputLocaleIndex}
+import "language-indicator\lib\GetCaretRect"       	{GetCaretRect}
+import "language-indicator\lib\DebugCaretPosition" 	{DebugCaretPosition}
 
 import "language-indicator\lib\LanguageIndicatorCaret" 	as LI_Caret
 import "language-indicator\lib\LanguageIndicatorCursor"	as LI_Cursor
@@ -52,17 +54,38 @@ CheckLangCapsChange() {
   _st.capslock     	:= GetKeyState("Capslock", "T")
   is_locale_changed	:= (_st.locale   != _st.prev.locale  )
   is_caps_changed  	:= (_st.capslock != _st.prev.capslock)
+  is_caret_checked := 0, is_cursor_checked := 0, is_caret_pos_changed := 0
+
+  GetCaretRect(&_st.‸.←, &_st.‸.↑, &_st.‸.→, &_st.‸.↓, &detectMethod)
+  if cfg.caret.debugCaretPosition {
+    DebugCaretPosition(&_st.‸.←, &_st.‸.↑, &_st.‸.→, &_st.‸.↓, &detectMethod)
+  }
+  _st.‸.detectMethod := detectMethod
+  is_caret_pos_changed	:= (_st.‸.← != _st.prev.‸.←)
+    ||                	   (_st.‸.↑ != _st.prev.‸.↑)
+    ||                	   (_st.‸.→ != _st.prev.‸.→)
+    ||                	   (_st.‸.↓ != _st.prev.‸.↓)
   if is_locale_changed {
     _st.prev.locale	:= _st.locale
     LI_Tray.CheckTray()
-    LI_Caret.CheckCaret()
-    LI_Cursor.CheckCursor()
+    LI_Caret.CheckCaret(), is_caret_checked := 1
+    LI_Cursor.CheckCursor(), is_cursor_checked := 1
   }
   if is_caps_changed {
     _st.prev.capslock	:= _st.capslock
-    if !is_locale_changed {
-      LI_Caret.CheckCaret()
-      LI_Cursor.CheckCursor()
+    if !is_caret_checked {
+      LI_Caret.CheckCaret(), is_caret_checked := 1
+    }
+    if !is_cursor_checked {
+      LI_Cursor.CheckCursor(), is_cursor_checked := 1
+    }
+  }
+  if is_caret_pos_changed {
+    _st.prev.‸.←	:= _st.‸.←
+    _st.prev.‸.↑	:= _st.‸.↑
+    _st.prev.‸.→	:= _st.‸.→
+    _st.prev.‸.↓	:= _st.‸.↓
+    _st.prev.‸.t	:= A_TickCount
     }
   }
 }

@@ -6,7 +6,6 @@ import "language-indicator\cfg"  	as cfg
 import "language-indicator\state"	{state as _st}
 import "language-indicator\var"  	{localesArray, langNamesArray}
 
-import "language-indicator\lib\DebugCaretPosition" 	{DebugCaretPosition}
 import "language-indicator\lib\GetInputLocaleIndex"	{GetInputLocaleIndex}
 import "language-indicator\lib\GetCaretRect"       	{GetCaretRect}
 import "language-indicator\lib\ImagePainter"       	{ImagePainter} ; based on ImagePut.ahk
@@ -97,16 +96,10 @@ PaintCaretMark(markObj) {
 	; not used, only for debugging
 	_st.caretMarkImage := SubStr(markObj.image, 1, 20) . "..."
 
-	top := -1, left := -1, bottom := -1, right := -1
-	w := 0, h := 0
-	GetCaretRect(&left, &top, &right, &bottom, &detectMethod)
-	w := right - left
-	h := bottom - top
+	w := _st.‸.→ - _st.‸.←
+	h := _st.‸.↓ - _st.‸.↑
 
-	if cfg.caret.debugCaretPosition
-		DebugCaretPosition(&left, &top, &right, &bottom, &detectMethod)
-
-	if (InStr(detectMethod, "failure") or (w < 1 and h < 1)) {
+	if (InStr(_st.‸.detectMethod, "failure") or (w < 1 and h < 1)) {
 		caretMark.HideWindow()
 		return
 	}
@@ -114,17 +107,23 @@ PaintCaretMark(markObj) {
 	caretMark.StorePrev()
 	caretMark.img.name := markObj.name
 	caretMark.img.image := markObj.image
-	caretMark.img.x := left
-	caretMark.img.y := top
+	caretMark.img.x := _st.‸.←
+	caretMark.img.y := _st.‸.↑
 
 	caretMark.Paint()
 }
 
-InitCaretState() {
+export InitCaretState() {
 	if !_st.HasOwnProp("caretMarkName")
 		_st.caretMarkName := ""
 	if !_st.HasOwnProp("caretMarkImage")
 		_st.caretMarkImage := ""
+	if !_st.HasOwnProp("‸")
+		_st.‸ := {↑:-1, ←:-1, ↓:-1, →:-1, detectMethod: "", t: A_TickCount, t_moved: 0}
+	if !_st.HasOwnProp("prev")
+		_st.prev := {‸:{↑:-1, ←:-1, ↓:-1, →:-1, detectMethod: "", t: A_TickCount, t_moved: 0}}
+	if !_st.prev.HasOwnProp("‸")
+		_st.prev.‸ := {↑:-1, ←:-1, ↓:-1, →:-1, detectMethod: "", t: A_TickCount, t_moved: 0}
 }
 
 UpdateCaretState() {
