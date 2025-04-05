@@ -60,6 +60,8 @@ CheckLangCapsChange() {
   if cfg.caret.debugCaretPosition {
     DebugCaretPosition(&_st.‸.←, &_st.‸.↑, &_st.‸.→, &_st.‸.↓, &detectMethod)
   }
+  ; tooltip((_st.‸.→     -_st.‸.←     ) "⋅" (_st.‸.↓      - _st.‸.↑     ) " ←" _st.‸.←      " →" _st.‸.→      " ↑ " _st.‸.↑      " ↓" _st.‸.↓       "`n"
+          ; (_st.prev.‸.→-_st.prev.‸.←) "⋅" (_st.prev.‸.↓ - _st.prev.‸.↑) " ←" _st.prev.‸.← " →" _st.prev.‸.→ " ↑ " _st.prev.‸.↑ " ↓" _st.prev.‸.↓ )
   _st.‸.detectMethod := detectMethod
   is_caret_pos_changed	:= (_st.‸.← != _st.prev.‸.←)
     ||                	   (_st.‸.↑ != _st.prev.‸.↑)
@@ -80,6 +82,9 @@ CheckLangCapsChange() {
       LI_Cursor.CheckCursor(), is_cursor_checked := 1
     }
   }
+  ; 🕐Δ := A_TickCount - _st.prev.‸.t
+  ; tooltip(((cfg.languageIndicator.delay‸ > 🕐Δ)?"<":" ")
+  ;   (_st.‸.t_moved?" 🏃":"  ") (is_caret_pos_changed?" Δ":"    ") (cfg.languageIndicator.delay‸?" ⏳":"  "))
   if is_caret_pos_changed {
     _st.prev.‸.←	:= _st.‸.←
     _st.prev.‸.↑	:= _st.‸.↑
