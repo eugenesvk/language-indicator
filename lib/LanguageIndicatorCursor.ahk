@@ -5,37 +5,26 @@
 ; 1. lookin into "./cursors/" folder for files "1.cur", "1-capslock.cur", "2.cur", etc.
 ; 2. in case there's no "./cursors/" folder exist, embedded images to be used to set mark near mouse cursor/pointer
 
-; #singleinstance force
+import "language-indicator\cfg"  	as cfg
+import "language-indicator\state"	{state as _st}
 
-import "language-indicator/lib/GetInputLocaleIndex"  	{GetInputLocaleIndex} ; https://www.autohotkey.com/boards/viewtopic.php?t=84140
-import "language-indicator/lib/GetCapslockState"     	{GetCapslockState}
-import "language-indicator/lib/GetMousePosPrediction"	as GetMousePosPrediction
-import "language-indicator/lib/ImagePainter"         	{ImagePainter} ; based on ImagePut.ahk
-import "language-indicator/lib/OnFrameRate"          	as OnFrameRate
-import "language-indicator/lib/UseBase64Image"       	{*}
-import "language-indicator/lib/UseCached"            	{UseCached}
-Import "language-indicator/lib/Log"                  	as L
+import "language-indicator\lib\GetInputLocaleIndex"  	{GetInputLocaleIndex} ; https://www.autohotkey.com/boards/viewtopic.php?t=84140
+import "language-indicator\lib\GetCapslockState"     	{GetCapslockState}
+import "language-indicator\lib\GetMousePosPrediction"	as GetMousePosPrediction
+import "language-indicator\lib\ImagePainter"         	{ImagePainter} ; based on ImagePut.ahk
+import "language-indicator\lib\OnFrameRate"          	as OnFrameRate
+import "language-indicator\lib\UseBase64Image"       	{*}
+import "language-indicator\lib\UseCached"            	{UseCached}
 Import "language-indicator\lib\Log"                  	as L
 
-if IsSet(languageIndicator)
-	cfg.cursor.updatePeriod := languageIndicator.updatePeriod
-
-if !IsSet(state)
-	global state := {}
 InitCursorState()
 
 global cursorMark := ImagePainter()
 cursorMark.margin := cfg.cursor.markMargin
 
-RunCursor()
-RunCursor() {
-	SetTimer(CheckCursor, cfg.cursor.updatePeriod)
-	OnExit(CursorExitFunc)
-}
-
 ; cursor to reflect locale and capslock state
-CheckCursor() {
-	global cfg, cursorMark
+export CheckCursor() {
+	global cursorMark
 	if (A_Cursor != cfg.cursor.target.cursorName) {
 		RevertCursors()
 		cursorMark.HideWindow()
@@ -48,29 +37,28 @@ CheckCursor() {
 }
 
 UseCursorMarkEmbedded() {
-	if (state.cursorMarkName == "") {
+	if (_st.cursorMarkName == "") {
 		cursorMark.RemoveWindow()
 		return
 	}
-	mark := UseBase64Image(state.cursorMarkName) ; { name: <str>, image: <0 | path | base64> }
+	mark := UseBase64Image(_st.cursorMarkName) ; { name: <str>, image: <0 | path | base64> }
 	PaintCursorMark(mark) ; repaint mark every ~cfg.updatePeriod...
 	onFrame.ScheduleRun(() => PaintCursorMark(mark), "cursor", cfg.cursor.updatePeriod) ; ...repaint mark on a few next frames
 }
 onFrame := OnFrameRate.OnFrameRateScheduler.Increase() ; must be removed if not used in the line above
 
 UseCursorFile() {
-	if (state.cursorFile == "") {
+	if (_st.cursorFile == "") {
 		RevertCursors()
 		return
 	}
-	SetCursorFromFile(state.cursorFile)
+	SetCursorFromFile(_st.cursorFile)
 }
 
 ; (no capslock + initial language) → 0
 ; (capslock + initial language) → "arrow_white_9px"
 ; (no capslock + second language) → "circle_red_9px"
 GetCursorMarkName(locale := 1, capslock := 0) {
-	global cfg
 	if (locale == 1 and capslock == 0)
 		return "" ; use default cursor
 
@@ -88,15 +76,14 @@ GetCursorMarkName(locale := 1, capslock := 0) {
 }
 
 GetCursorFile() {
-	global cfg
 	for ext in cfg.cursor.files.extensions {
-		if state.capslock {
-			path := cfg.cursor.files.folder . state.locale . cfg.cursor.files.capslockSuffix . ext ; e.g. "cursors\1-capslock.cur"
+		if _st.capslock {
+			path := cfg.cursor.files.folder . _st.locale . cfg.cursor.files.capslockSuffix . ext ; e.g. "cursors\1-capslock.cur"
 			if (FileExist(path))
 				return path ; capslock-suffixed file to be used
 		}
 		; fallback if no capslock file found
-		path := cfg.cursor.files.folder . state.locale . ext ; e.g. "\cursors\1.cur"
+		path := cfg.cursor.files.folder . _st.locale . ext ; e.g. "\cursors\1.cur"
 		if (FileExist(path))
 			return path
 	}
@@ -106,7 +93,7 @@ GetCursorFile() {
 global modifiedCursorsCount := 0
 ; https://autohotkey.com/board/topic/32608-changing-the-system-cursor/
 SetCursorFromFile(filePath := "") {
-	global cfg, modifiedCursorsCount
+	global modifiedCursorsCount
 	if (!filePath or filePath == "") {
 		; L.Log("LanguageIndicatorCursor.ahk: cursor's filePath is not set")
 		return
@@ -137,7 +124,7 @@ RevertCursors() {
 
 ; markObj := { name: ..., image: ...}
 PaintCursorMark(markObj, cursor := "IBeam") {
-	global cfg, cursorMark
+	global cursorMark
 
 	if (cursor != 0 and cursor != A_Cursor) { ; cursor not matched
 		cursorMark.HideWindow()
@@ -170,38 +157,38 @@ PaintCursorMark(markObj, cursor := "IBeam") {
 
 InitCursorState() {
 	global state
-	if !state.HasOwnProp("prev")
-		state.prev := {}
-	if !state.HasOwnProp("locale")
-		state.locale := 1
-	if !state.HasOwnProp("capslock")
-		state.capslock := 0
-	if !state.HasOwnProp("cursorFile")
-		state.cursorFile := ""
-	if !state.HasOwnProp("cursorMarkName")
-		state.cursorMarkName := ""
+	if !_st.HasOwnProp("prev")
+		_st.prev := {}
+	if !_st.HasOwnProp("locale")
+		_st.locale := 1
+	if !_st.HasOwnProp("capslock")
+		_st.capslock := 0
+	if !_st.HasOwnProp("cursorFile")
+		_st.cursorFile := ""
+	if !_st.HasOwnProp("cursorMarkName")
+		_st.cursorMarkName := ""
 }
 
 UpdateCursorState() {
 	global state
-	state.prev.locale := state.locale
-	state.locale := GetInputLocaleIndex()
+	_st.prev.locale := _st.locale
+	_st.locale := GetInputLocaleIndex()
 
-	state.prev.capslock := state.capslock
-	state.capslock := GetCapslockState()
+	_st.prev.capslock := _st.capslock
+	_st.capslock := GetCapslockState()
 
 	if CursorsFolderExist() {
-		state.prev.cursorFile := state.cursorFile
-		state.cursorFile := GetCursorFile()
+		_st.prev.cursorFile := _st.cursorFile
+		_st.cursorFile := GetCursorFile()
 
-		state.prev.cursorMarkName := state.cursorMarkName
-		state.cursorMarkName := ""
+		_st.prev.cursorMarkName := _st.cursorMarkName
+		_st.cursorMarkName := ""
 	} else {
-		state.prev.cursorMarkName := state.cursorMarkName
-		state.cursorMarkName := GetCursorMarkName(state.locale, state.capslock)
+		_st.prev.cursorMarkName := _st.cursorMarkName
+		_st.cursorMarkName := GetCursorMarkName(_st.locale, _st.capslock)
 
-		state.prev.cursorFile := state.cursorFile
-		state.cursorFile := ""
+		_st.prev.cursorFile := _st.cursorFile
+		_st.cursorFile := ""
 	}
 }
 
@@ -215,7 +202,7 @@ CheckCursorsFolderExist() {
 	return exist
 }
 
-CursorExitFunc(ExitReason, ExitCode) {
+export CursorExitFunc(ExitReason, ExitCode) {
 	if !(ExitReason ~= "^(?i:Logoff|Shutdown)$") {
 		RevertCursors()
 		cursorMark.RemoveWindow()
