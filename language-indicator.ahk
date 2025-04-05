@@ -14,7 +14,7 @@ import "language-indicator\lib\LanguageIndicatorTray"  	as LI_Tray
 initState()
 initState() {
   if !_st.HasOwnProp("locale") {
-    _st.locale := 1
+    _st.locale := -1 ; invalid index to trigger initial update
   }
   if !_st.HasOwnProp("lang_id") {
     _st.lang_id := 0x0000
@@ -34,7 +34,9 @@ initState() {
   if !_st.prev.HasOwnProp("capslock") {
     _st.prev.capslock := _st.capslock
   }
+  CheckLangCapsChange()
 }
+
 SetTimers()
 SetTimers() {
   SetTimer(CheckLangCapsChange, cfg.languageIndicator.updatePeriod)
@@ -48,17 +50,17 @@ CheckLangCapsChange() {
   _st.capslock     	:= GetKeyState("Capslock", "T")
   is_locale_changed	:= (_st.locale   != _st.prev.locale  )
   is_caps_changed  	:= (_st.capslock != _st.prev.capslock)
-  if (is_locale_changed) {
+  if is_locale_changed {
     _st.prev.locale	:= _st.locale
-  }
-  if (is_caps_changed) {
-    _st.prev.capslock	:= _st.capslock
-  }
-
-  if        (is_locale_changed && is_caps_changed) {
+    LI_Tray.CheckTray()
     LI_Caret.CheckCaret()
     LI_Cursor.CheckCursor()
-  } else if (is_locale_changed) {
-    LI_Tray.CheckTray()
+  }
+  if is_caps_changed {
+    _st.prev.capslock	:= _st.capslock
+    if !is_locale_changed {
+      LI_Caret.CheckCaret()
+      LI_Cursor.CheckCursor()
+    }
   }
 }
