@@ -32,6 +32,16 @@ export cursor := {
   target                  	: {
     cursorId              	: 32513, ; IDC_ARROW := 32512, IDC_IBEAM := 32513, IDC_WAIT := 32514, ...
     cursorName            	: "IBeam", ; must be consistent with ↑
-  },
-  updatePeriod	: languageIndicator.updatePeriod,
+  }                       	,
+  updatePeriod            	: languageIndicator.updatePeriod,
+}
+
+export tray_icon := {
+  debug                   	: false,
+  files                   	: {
+    folderExistCheckPeriod	: 1000, ; optimization?
+    folder                	: A_ScriptDir . "\language-indicator\tray_icon\",
+    ; extensions          	: [".ico",".cur",".ani"], ;EXE DLL CPL SCR and other types that contain icon resources
+  }                       	,
+  updatePeriod            	: languageIndicator.updatePeriod,
 }
