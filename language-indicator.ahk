@@ -9,38 +9,56 @@ import "language-indicator\lib\GetInputLocaleIndex"	{GetInputLocaleIndex}
 
 import "language-indicator\lib\LanguageIndicatorCaret" 	as LI_Caret
 import "language-indicator\lib\LanguageIndicatorCursor"	as LI_Cursor
+import "language-indicator\lib\LanguageIndicatorTray"  	as LI_Tray
 
+initState()
+initState() {
+  if !_st.HasOwnProp("locale") {
+    _st.locale := 1
+  }
+  if !_st.HasOwnProp("lang_id") {
+    _st.lang_id := 0x0000
+  }
+  if !_st.HasOwnProp("capslock") {
+    _st.capslock := 0
+  }
+  if !_st.HasOwnProp("prev") {
+    _st.prev := {locale:_st.locale, lang_id:_st.lang_id, capslock:_st.capslock}
+  }
+  if !_st.prev.HasOwnProp("locale") {
+    _st.prev.locale := _st.locale
+  }
+  if !_st.prev.HasOwnProp("lang_id") {
+    _st.prev.lang_id := _st.lang_id
+  }
+  if !_st.prev.HasOwnProp("capslock") {
+    _st.prev.capslock := _st.capslock
+  }
+}
 SetTimers()
 SetTimers() {
-  SetTimer(CheckLangChange, cfg.languageIndicator.updatePeriod)
+  SetTimer(CheckLangCapsChange, cfg.languageIndicator.updatePeriod)
   OnExit(LI_Caret.CaretExitFunc)
   OnExit(LI_Cursor.CursorExitFunc)
+  OnExit(LI_Tray.TrayExitFunc)
 }
 
-CheckLangChange() {
-  static last_changed_locale := 0
-  lang_id := 0x0000
-  _st.prev.locale	:= _st.locale
-  _st.locale     	:= GetInputLocaleIndex(&lang_id)
-  if   (_st.locale != _st.prev.locale)
-    || (_st.locale != last_changed_locale) {
-    last_changed_locale := _st.locale
-    set_lang := False
-    for i, l_id in localesArray {
-      if (lang_id == l_id) {
-        set_lang := True
-        try {
-          TraySetIcon("language-indicator\img\lang\" langNamesArray[i] ".ico",,)
-        } catch Error as err {
-          TraySetIcon("*",,)
-        }
-        break
-      }
-    }
-    if !set_lang { ; todo: this is a frequent operation, does it cost much? is it really needed?
-      ; TraySetIcon("*",,)
-    }
+CheckLangCapsChange() {
+  _st.locale       	:= GetInputLocaleIndex(&_st.lang_id)
+  _st.capslock     	:= GetKeyState("Capslock", "T")
+  is_locale_changed	:= (_st.locale   != _st.prev.locale  )
+  is_caps_changed  	:= (_st.capslock != _st.prev.capslock)
+  if (is_locale_changed) {
+    _st.prev.locale	:= _st.locale
+  }
+  if (is_caps_changed) {
+    _st.prev.capslock	:= _st.capslock
+  }
+
+  if        (is_locale_changed && is_caps_changed) {
     LI_Caret.CheckCaret()
     LI_Cursor.CheckCursor()
+  } else if (is_locale_changed) {
+    LI_Tray.CheckTray()
   }
 }
