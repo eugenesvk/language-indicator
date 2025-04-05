@@ -191,23 +191,23 @@ UpdateCaretState() {
 		if !set_lang { ; todo: this is a frequent operation, does it cost much? is it really needed?
 			; TraySetIcon("*",,)
 		}
-	}
 
-	state.prev.capslock := state.capslock
-	state.capslock := GetCapslockState()
+		state.prev.capslock := state.capslock
+		state.capslock := GetCapslockState()
 
-	if CaretsFolderExist() {
-		state.prev.caretMarkImage := state.caretMarkImage
-		state.caretMarkImage := GetCaretMarkFile()
+		if CaretsFolderExist() {
+			state.prev.caretMarkImage := state.caretMarkImage
+			state.caretMarkImage := GetCaretMarkFile()
 
-		state.prev.caretMarkName := state.caretMarkName
-		state.caretMarkName := ""
-	} else {
-		state.prev.caretMarkName := state.caretMarkName
-		state.caretMarkName := GetCaretMarkName(state.locale, state.capslock)
+			state.prev.caretMarkName := state.caretMarkName
+			state.caretMarkName := ""
+		} else {
+			state.prev.caretMarkName := state.caretMarkName
+			state.caretMarkName := GetCaretMarkName(state.locale, state.capslock)
 
-		state.prev.caretMarkImage := state.caretMarkImage
-		state.caretMarkImage := ""
+			state.prev.caretMarkImage := state.caretMarkImage
+			state.caretMarkImage := ""
+		}
 	}
 }
 
