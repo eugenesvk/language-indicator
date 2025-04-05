@@ -15,22 +15,7 @@ import "language-indicator/lib/TickCount"          	{TickCount}
 import "language-indicator/lib/Log"                	as L
 import "language-indicator/lib/UseCached"          	{UseCached}
 import "language-indicator/var"                    	{localesArray, langNamesArray}
-
-if !IsSet(cfg)
-	global cfg := {}
-
-cfg.caret := {
-	debug: false,
-	debugCaretPosition: false,
-	files: {
-		capslockSuffix: "-capslock",
-		folderExistCheckPeriod: 1000, ; optimization?
-		folder: A_ScriptDir . "\language-indicator\carets\",
-		extensions: [".png", ".gif"]
-	},
-	markMargin: { x: 1, y: -1 },
-	updatePeriod: 100,
-}
+import "language-indicator\lib\UseCached"          	{UseCached}
 
 if IsSet(languageIndicator)
 	cfg.caret.updatePeriod := languageIndicator.updatePeriod

@@ -15,26 +15,7 @@ import "language-indicator/lib/OnFrameRate"          	as OnFrameRate
 import "language-indicator/lib/UseBase64Image"       	{*}
 import "language-indicator/lib/UseCached"            	{UseCached}
 Import "language-indicator/lib/Log"                  	as L
-
-if !IsSet(cfg)
-	global cfg := {}
-
-cfg.cursor := {
-	debug: false,
-	files: {
-		capslockSuffix: "-capslock",
-		folderExistCheckPeriod: 1000, ; optimization?
-		folder: A_ScriptDir . "\language-indicator\cursors\",
-		extensions: [".cur", ".ani", ".ico"],
-	},
-	markMargin: { x: 11, y: -11 },
-	mousePositionPrediction: 0.5, ; reduces lagging in case of embeddded image used as a mark, see GetMousePosPrediction.ahk
-	target: {
-		cursorId: 32513, ; IDC_ARROW := 32512, IDC_IBEAM := 32513, IDC_WAIT := 32514, ...
-		cursorName: "IBeam", ; must be consistent with ↑
-	},
-	updatePeriod: 100,
-}
+Import "language-indicator\lib\Log"                  	as L
 
 if IsSet(languageIndicator)
 	cfg.cursor.updatePeriod := languageIndicator.updatePeriod
