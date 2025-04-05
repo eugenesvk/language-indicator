@@ -85,28 +85,32 @@ CheckLangCapsChange() {
   ; 🕐Δ := A_TickCount - _st.prev.‸.t
   ; tooltip(((cfg.languageIndicator.delay‸ > 🕐Δ)?"<":" ")
   ;   (_st.‸.t_moved?" 🏃":"  ") (is_caret_pos_changed?" Δ":"    ") (cfg.languageIndicator.delay‸?" ⏳":"  "))
-  if is_caret_pos_changed {
+  if is_caret_pos_changed { ; save pos on every change
     _st.prev.‸.←	:= _st.‸.←
     _st.prev.‸.↑	:= _st.‸.↑
     _st.prev.‸.→	:= _st.‸.→
     _st.prev.‸.↓	:= _st.‸.↓
-    _st.prev.‸.t	:= A_TickCount
-    if !cfg.languageIndicator.delay‸ {
+  }
+  if !cfg.languageIndicator.delay‸ { ; upd pos on every change, no timer needed
+    if is_caret_pos_changed {
       if !is_caret_checked {
         LI_Caret.CheckCaret(), is_caret_checked := 1
       }
-    } else { ; caret moved 1st time or recently, reset delayed move mar, but not indicator
+    }
+  } else { ; also track timer to calculate delay‸
+    if is_caret_pos_changed { ; caret moved 1st time or recently, reset delayed move mar, but not indicator
+      _st.prev.‸.t 	:= A_TickCount
       _st.‸.t_moved	:= 0
-    } ;↓ caret stopped with enough time passing, update
-  } else if ((cfg.languageIndicator.delay‸ < (A_TickCount - _st.prev.‸.t)) && !_st.‸.t_moved) {
-    _st.‸.t_moved	:= 1
-    _st.prev.‸.t 	:= A_TickCount
-    _st.prev.‸.← 	:= _st.‸.←
-    _st.prev.‸.↑ 	:= _st.‸.↑
-    _st.prev.‸.→ 	:= _st.‸.→
-    _st.prev.‸.↓ 	:= _st.‸.↓
-    if !is_caret_checked {
-      LI_Caret.CheckCaret(), is_caret_checked := 1
+    } else if (!_st.‸.t_moved && (cfg.languageIndicator.delay‸ < (A_TickCount - _st.prev.‸.t))) {
+      _st.prev.‸.t 	:= A_TickCount
+      _st.‸.t_moved	:= 1
+      _st.prev.‸.← 	:= _st.‸.←
+      _st.prev.‸.↑ 	:= _st.‸.↑
+      _st.prev.‸.→ 	:= _st.‸.→
+      _st.prev.‸.↓ 	:= _st.‸.↓
+      if !is_caret_checked {
+        LI_Caret.CheckCaret(), is_caret_checked := 1
+      }
     }
   }
 }
