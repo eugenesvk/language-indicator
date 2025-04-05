@@ -34,6 +34,8 @@ initState() {
   if !_st.prev.HasOwnProp("capslock") {
     _st.prev.capslock := _st.capslock
   }
+  LI_Caret.InitCaretState()
+  LI_Cursor.InitCursorState()
   CheckLangCapsChange()
 }
 

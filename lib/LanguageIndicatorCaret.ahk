@@ -16,8 +16,6 @@ import "language-indicator\lib\TickCount"          	{TickCount}
 import "language-indicator\lib\Log"                	as L
 import "language-indicator\lib\UseCached"          	{UseCached}
 
-InitCaretState()
-
 global caretMark := ImagePainter()
 caretMark.margin := cfg.caret.markMargin
 

@@ -16,8 +16,6 @@ import "language-indicator\lib\UseBase64Image"       	{*}
 import "language-indicator\lib\UseCached"            	{UseCached}
 Import "language-indicator\lib\Log"                  	as L
 
-InitCursorState()
-
 global cursorMark := ImagePainter()
 cursorMark.margin := cfg.cursor.markMargin
 
@@ -154,7 +152,7 @@ PaintCursorMark(markObj, cursor := "IBeam") {
 	cursorMark.Paint()
 }
 
-InitCursorState() {
+export InitCursorState() {
 	if !_st.HasOwnProp("cursorFile")
 		_st.cursorFile := ""
 	if !_st.HasOwnProp("cursorMarkName")
